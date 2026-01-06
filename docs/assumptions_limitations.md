@@ -2,4 +2,4 @@
 
 - Returns calculated using Close prices (no dividend/split adjustments—production would use Adjusted Close).
 - Data cutoff: 2026-01-05 (as of download).
-- No sector/industry metadata in raw data (will enrich later if needed).
+- Sector data is static (current as of Jan 2026); historical reclassifications not accounted for.
