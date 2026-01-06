@@ -1,1 +1,1 @@
-Dashboard screenshots will go here
+Dashboard screenshots for README will be added here.
