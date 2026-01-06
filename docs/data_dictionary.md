@@ -8,4 +8,12 @@
 - [Ticker]_Close: Closing price
 - [Ticker]_Volume: Trading volume
 
+## Dimension Table: Stocks & Sectors (sp500_sectors.csv)
+| Column       | Description                          | Example              |
+|--------------|--------------------------------------|----------------------|
+| Ticker      | Stock symbol                         | AAPL                |
+| Sector      | GICS Sector                          | Information Technology |
+| Industry    | GICS Sub-Industry                    | Technology Hardware |
+| Company Name| Full company name                    | Apple Inc.          |
+
 (To be expanded post-transformation)
