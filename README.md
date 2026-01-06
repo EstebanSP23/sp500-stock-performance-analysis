@@ -18,7 +18,7 @@ Retail investors often struggle with overwhelming market data when building port
 ## Data Sources & Limitations
 - **Primary Source:** [Kaggle - S&P 500 Daily Update Dataset](https://www.kaggle.com/datasets/yash16jr/s-and-p500-daily-update-dataset)  
   Daily OHLCV data for ~500 stocks, 2010-01-04 to 2026-01-05 (wide format).
-- **Enrichment:** Sector mapping from []([https://github.com/datasets/s-and-p-500-companies/blob/main/data/constituents.csv](https://github.com/EstebanSP23/sp500-stock-performance-analysis/blob/main/data/raw/sp500_sectors.csv)) (derived from Wikipedia List of S&P 500 companies, as of Jan 2026)
+- **Enrichment:** Sector mapping from [GitHub - sp500-stock-performance-analysis]([https://github.com/datasets/s-and-p-500-companies/blob/main/data/constituents.csv](https://github.com/EstebanSP23/sp500-stock-performance-analysis/blob/main/data/raw/sp500_sectors.csv)) (derived from Wikipedia List of S&P 500 companies, as of Jan 2026)
 - **Limitations:** 
   - No Adjusted Close (returns exclude dividends/splits—common approximation for price-based analysis).
   - Static sector assignments (no point-in-time changes for historical additions/removals)
