@@ -13,6 +13,7 @@ Retail investors often struggle with overwhelming market data when building port
 - Which stocks/sectors delivered the highest risk-adjusted returns?
 - How did performance vary during major events (e.g., 2020 COVID crash, 2022 inflation, recent 2025-2026 rallies)?
 - What correlations exist to support better diversification?
+- Metrics like Sharpe ratio >1.5 for recommendations.
 
 ## Data Sources & Limitations
 - **Primary Source:** [Kaggle - S&P 500 Daily Update Dataset](https://www.kaggle.com/datasets/yash16jr/s-and-p500-daily-update-dataset)  
