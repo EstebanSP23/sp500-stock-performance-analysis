@@ -10,4 +10,4 @@ Structure: Wide format (~2516 columns: Date + OHLCV per stock)
 
 sp500_sectors.csv: Ticker-to-GICS Sector mapping.
 
-Source: https://github.com/EstebanSP23/sp500-stock-performance-analysis/blob/main/data/raw/sp500_sectors.csv (accessed Jan 2026)
+Source: [GitHub sp500-stock-performance-analysis sp500_sectors.csv](https://github.com/EstebanSP23/sp500-stock-performance-analysis/blob/main/data/raw/sp500_sectors.csv) (derived from Wikipedia List of S&P 500 companies, as of Jan 2026)
