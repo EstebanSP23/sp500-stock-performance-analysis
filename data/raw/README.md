@@ -8,6 +8,4 @@ Date range: 2010-01-04 to 2026-01-05
 
 Structure: Wide format (~2516 columns: Date + OHLCV per stock)
 
-sp500_sectors.csv: Ticker-to-GICS Sector mapping.
-
-Source: [GitHub sp500-stock-performance-analysis sp500_sectors.csv](https://github.com/EstebanSP23/sp500-stock-performance-analysis/blob/main/data/raw/sp500_sectors.csv) (derived from Wikipedia List of S&P 500 companies, as of Jan 2026)
+sp500_sectors.csv: Extracted from Wikipedia List of S&P 500 companies (accessed Jan 6, 2026). Columns: Ticker, Sector, Industry, Company Name.
