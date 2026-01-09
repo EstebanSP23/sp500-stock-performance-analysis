@@ -65,6 +65,9 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 - **Calculations:** Reusable DAX measures (e.g., daily/total returns, annualized volatility, Sharpe ratio)
 - **Visualization:** Interactive dashboard for exploration and simple portfolio simulation
 
+## Data Model & Relationships
+*(To be updated shortly – star schema with Date dimension, Stock dimension from sector enrichment, and one-to-many relationships)*
+
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
 
