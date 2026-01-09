@@ -65,8 +65,12 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 - **Calculations:** Reusable DAX measures (e.g., daily/total returns, annualized volatility, Sharpe ratio)
 - **Visualization:** Interactive dashboard for exploration and simple portfolio simulation
 
-## Data Model & Relationships
-*(To be updated shortly – star schema with Date dimension, Stock dimension from sector enrichment, and one-to-many relationships)*
+## Data Model & Relationships (Current State)
+- Fact table: Fact_StockPrices (wide format, 1,903,495 rows)
+  - Grain: One row per trading date + ticker
+  - Columns: Date, Ticker, Open, High, Low, Close, Volume
+- Next: Create Date dimension table, relate Stock dimension from sector enrichment, and establish star schema relationships.
+- Goal: Enable time-intelligence functions (e.g., year-over-year returns) and sector-based slicing.
 
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
