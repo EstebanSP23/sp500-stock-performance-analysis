@@ -26,6 +26,33 @@ Retail investors often struggle with overwhelming market data when building port
   
 (See `/docs/` for data dictionary and full assumptions.)
 
+## Data Preparation & ETL Process
+
+The raw dataset was a wide-format CSV (~150 MB) with ~2516 columns containing daily OHLCV data for ~503 S&P 500 stocks from 2010-01-04 to 2026-01-05. The data was grouped by metric (all Closes together, then all Highs, etc.) with multi-row headers, requiring significant transformation.
+
+**Key Challenges & Solutions**
+- Multi-row headers & grouped columns → Used transpose to flip the structure, making metric groups vertical and easier to handle.
+- Missing or inconsistent metadata → Filled down PriceType ("Close", "High", "Low", "Open", "Volume") and Ticker labels using Power Query Fill Down.
+- Performance & crashes with large wide data → Avoided manual column selection; used transpose + targeted filtering and verification steps.
+- Validation → Manually checked group sizes (503 rows per metric) and specific ticker/date combinations (e.g., AAPL on 19/01/2010, AMZN on 14/01/2010, ABT on 22/01/2010) — each returned exactly 5 metrics in one row after pivot.
+
+**Final Fact Table (Fact_StockPrices)**
+- Grain: One row per Date + Ticker
+- Columns: Date, Ticker, Open, High, Low, Close, Volume
+- Row count: 1,903,495
+- Transformation steps performed in Power Query (ETL layer) before loading to the model.
+
+This process mirrors real-world ETL for financial datasets — handling messy exports, verifying integrity, and documenting decisions.
+
+Major Power Query Steps:
+- Imported raw CSV without promoting headers
+- Transposed table to make metric groups vertical
+- Promoted dates as column headers
+- Filled down PriceType and Ticker labels
+- Removed junk rows/columns
+- Unpivoted date columns to long format
+- Pivoted PriceType back to wide format (Open, High, Low, Close, Volume)
+
 ## Methodology & Tools
 - **ETL & Cleaning:** Power Query (unpivot wide → long format, date handling)
 - **Data Modeling:** Star schema in Power BI
