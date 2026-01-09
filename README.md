@@ -16,9 +16,12 @@ Retail investors often struggle with overwhelming market data when building port
 - Metrics like Sharpe ratio >1.5 for recommendations.
 
 ## Data Sources & Limitations
+
 - **Primary Source:** [Kaggle - S&P 500 Daily Update Dataset](https://www.kaggle.com/datasets/yash16jr/s-and-p500-daily-update-dataset)  
   Daily Open, High, Close, Low, Volume data for ~500 stocks, 2010-01-04 to 2026-01-05 (wide format).
+
 - **Enrichment:** Sector mapping from [Wikipedia List of S&P 500 companies](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies) (GICS classifications, current as of Jan 6, 2026). Local copy: [sp500_sectors.csv](data/raw/sp500_sectors.csv).
+
 - **Limitations:** 
   - No Adjusted Close (returns exclude dividends/splits—common approximation for price-based analysis).
   - Static sector assignments (no point-in-time changes for historical additions/removals)
