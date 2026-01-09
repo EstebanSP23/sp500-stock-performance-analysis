@@ -37,24 +37,27 @@ The raw dataset was a wide-format CSV (~150 MB) with ~2516 columns containing da
 - Multi-row headers & grouped columns → Used transpose to flip the structure, making metric groups vertical and easier to handle.
 - Missing or inconsistent metadata → Filled down PriceType ("Close", "High", "Low", "Open", "Volume") and Ticker labels using Power Query Fill Down.
 - Performance & crashes with large wide data → Avoided manual column selection; used transpose + targeted filtering and verification steps.
-- Validation → Manually checked group sizes (503 rows per metric) and specific ticker/date combinations (e.g., AAPL on 19/01/2010, AMZN on 14/01/2010, ABT on 22/01/2010) — each returned exactly 5 metrics in one row after pivot.
+- Validation → Manually checked group sizes (503 rows per metric) and specific ticker/date combinations (e.g., AAPL on 19/01/2010, AMZN on 14/01/2010, ABT on 22/01/2010) — each returned exactly one row with all five metrics (Open, High, Low, Close, Volume) after final pivot.
 
 **Final Fact Table (Fact_StockPrices)**
 - Grain: One row per Date + Ticker
 - Columns: Date, Ticker, Open, High, Low, Close, Volume
-- Row count: 1,903,495
-- Transformation steps performed in Power Query (ETL layer) before loading to the model.
+- Row count: 1,903,495 (after pivot; ~6% missing rows due to delistings/gaps — normal for historical data)
+- Transformation performed entirely in Power Query (ETL layer) before loading to the model.
 
 This process mirrors real-world ETL for financial datasets — handling messy exports, verifying integrity, and documenting decisions.
 
-Major Power Query Steps:
-- Imported raw CSV without promoting headers
-- Transposed table to make metric groups vertical
-- Promoted dates as column headers
-- Filled down PriceType and Ticker labels
-- Removed junk rows/columns
-- Unpivoted date columns to long format
-- Pivoted PriceType back to wide format (Open, High, Low, Close, Volume)
+**Major Power Query Steps (Chronological)**
+1. Imported raw CSV without promoting headers  
+2. Transposed table to make metric groups vertical  
+3. Promoted dates as column headers  
+4. Filled down PriceType and Ticker labels  
+5. Removed junk rows/columns (e.g., empty "Date" column)  
+6. Unpivoted date columns to long format for verification  
+7. Pivoted PriceType back to wide format (Open, High, Low, Close, Volume)  
+8. Verified grain with spot-checks on specific tickers/dates
+
+Current state: Fact table loaded in wide format (1.9M rows), ready for star schema and DAX measures.
 
 ## Methodology & Tools
 - **ETL & Cleaning:** Power Query (unpivot wide → long format, date handling)
