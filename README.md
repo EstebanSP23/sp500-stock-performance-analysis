@@ -72,6 +72,27 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 - Next: Create Date dimension table, relate Stock dimension from sector enrichment, and establish star schema relationships.
 - Goal: Enable time-intelligence functions (e.g., year-over-year returns) and sector-based slicing.
 
+### Daily Return Calculation (Production-Grade Workaround)
+
+**Challenge**  
+Measure-based daily returns failed due to filter context and memory issues on 1.9M rows.
+
+**Solution**  
+Used calculated columns for:
+1. **Trading Day Index** — sequential rank per ticker (RANKX + FILTER + EARLIER)
+2. **Daily Return %** — LOOKUPVALUE to previous index's Close
+
+**Advantages**
+- Handles weekends, holidays, delistings automatically
+- Computed once at refresh — zero runtime performance impact
+- Works under any slicer/filter
+
+**Trade-offs**
+- Uses more model memory (two new columns)
+- Static (doesn't dynamically respond to visual filters — but correct for financial analysis)
+
+This is the standard pattern in financial analytics when measures become too slow.
+
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
 
