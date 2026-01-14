@@ -62,7 +62,7 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 ## Methodology & Tools
 - **ETL & Cleaning:** Power Query (unpivot wide → long format, date handling)
 - **Data Modeling:** Star schema in Power BI
-- **Calculations:** Reusable DAX measures (e.g., daily/total returns, annualized volatility, Sharpe ratio)
+- **Calculations:** Hybrid approach — DAX for aggregations and ratios (e.g., cumulative returns, Sharpe ratio), Python for heavy rolling statistics (e.g., 252-day volatility)
 - **Visualization:** Interactive dashboard for exploration and simple portfolio simulation
 
 ## Data Model & Relationships (Current State)
@@ -93,6 +93,42 @@ Used calculated columns for:
 
 This is the standard pattern in financial analytics when measures become too slow.
 
+## Rolling Volatility Optimization (Python Preprocessing)
+
+### Challenge
+Computing rolling 252-day volatility directly in Power BI using a DAX calculated column proved computationally expensive.  
+On a ~1.9M-row fact table, row-by-row window calculations significantly increased refresh time and impacted overall model responsiveness.
+
+### Design Decision
+To address this, rolling volatility was **precomputed upstream using Python** and imported as a physical column, rather than calculated in DAX.
+
+This approach follows common analytical best practices:
+- Heavy, row-level statistical computations → upstream (Python)
+- Semantic modeling and aggregation → Power BI
+
+### Implementation
+1. The fully transformed fact table was exported once from the Power BI model (via DAX Studio).
+2. A Python script (`build_volatility_252d.py`) computed:
+   - Rolling 252-day standard deviation per ticker
+   - `min_periods = 30` guardrail
+   - Annualization using √252
+   - Population standard deviation (`ddof = 0`) to match financial conventions.
+3. The enriched dataset was re-imported into Power BI as the primary fact table.
+4. The original DAX-based volatility column was removed.
+
+### Results
+- **Refresh time reduced from several minutes to seconds**
+- **Improved report responsiveness**
+- Cleaner semantic layer (no complex rolling DAX logic)
+- Identical analytical results with far better performance
+
+### Trade-offs
+- Volatility values are static between refreshes  
+  (acceptable for historical analysis and portfolio research)
+- Requires re-running the Python script if the dataset is updated
+
+This refactor mirrors real-world analytics pipelines, where feature engineering is performed outside the BI layer to ensure scalability and maintainability.
+
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
 
@@ -108,5 +144,6 @@ This is the standard pattern in financial analytics when measures become too slo
 - Production idea: Integrate live API (e.g., Yahoo Finance) for real-time updates
 - Risks: Market data volatility; past performance ≠ future results (note for ethical recommendations)
 
+> Note: Performance optimizations (Python preprocessing + Import storage mode) were intentionally prioritized to reflect production-grade analytics workflows rather than purely BI-layer calculations.
 ---
 *Project by [EstebanSP23](https://github.com/EstebanSP23) – Building a job-ready data analytics portfolio*
