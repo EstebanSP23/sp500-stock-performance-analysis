@@ -7,13 +7,13 @@
 ## Business Context
 Retail investors often struggle with overwhelming market data when building portfolios. This project analyzes historical S&P 500 stock performance to provide actionable insights on returns, risk, and diversification.
 
-**Business Problem:** How can we help everyday investors identify strong-performing stocks and sectors while managing risk using historical data?
+**Business Problem:** How can we help retail investors identify strong-performing stocks and sectors while managing risk using historical price data?
 
 **Key Questions Answered:**
 - Which stocks/sectors delivered the highest risk-adjusted returns?
 - How did performance vary during major events (e.g., 2020 COVID crash, 2022 inflation, recent 2025-2026 rallies)?
 - What correlations exist to support better diversification?
-- Metrics like Sharpe ratio >1.5 for recommendations.
+- Metrics such as the Sharpe ratio (risk-adjusted returns, annualized volatility as denominator) are used to contextualize performance rather than as strict investment recommendations.
 
 ## Data Sources & Limitations
 
@@ -44,6 +44,7 @@ The raw dataset was a wide-format CSV (~150 MB) with ~2516 columns containing da
 - Columns: Date, Ticker, Open, High, Low, Close, Volume
 - Row count: 1,903,495 (after pivot; ~6% missing rows due to delistings/gaps — normal for historical data)
 - Transformation performed entirely in Power Query (ETL layer) before loading to the model.
+- This ensured the analytical model operated on a clean, validated grain before any calculations or feature engineering were applied.
 
 This process mirrors real-world ETL for financial datasets — handling messy exports, verifying integrity, and documenting decisions.
 
@@ -78,7 +79,7 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 Measure-based daily returns failed due to filter context and memory issues on 1.9M rows.
 
 **Solution**  
-Used calculated columns for:
+Used calculated columns (computed at refresh time) for:
 1. **Trading Day Index** — sequential rank per ticker (RANKX + FILTER + EARLIER)
 2. **Daily Return %** — LOOKUPVALUE to previous index's Close
 
@@ -122,12 +123,17 @@ This approach follows common analytical best practices:
 - Cleaner semantic layer (no complex rolling DAX logic)
 - Identical analytical results with far better performance
 
+**Performance Summary**
+- Dataset size: ~1.9M rows
+- DAX rolling volatility refresh time: several minutes
+- Python-precomputed volatility refresh time: seconds
+
 ### Trade-offs
 - Volatility values are static between refreshes  
   (acceptable for historical analysis and portfolio research)
 - Requires re-running the Python script if the dataset is updated
 
-This refactor mirrors real-world analytics pipelines, where feature engineering is performed outside the BI layer to ensure scalability and maintainability.
+This refactor mirrors real-world analytics pipelines, where feature engineering is performed outside the BI layer to ensure scalability and maintainability. This separation of concerns aligns with production analytics patterns, where BI tools serve the semantic layer rather than the computational engine.
 
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
