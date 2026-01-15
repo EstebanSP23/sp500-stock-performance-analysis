@@ -70,7 +70,7 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 - Fact table: Fact_StockPrices (wide format, 1,903,495 rows)
   - Grain: One row per trading date + ticker
   - Columns: Date, Ticker, Open, High, Low, Close, Volume
-- Next: Create Date dimension table, relate Stock dimension from sector enrichment, and establish star schema relationships.
+- Next: Create Date dimension table, relate Stock dimension from sector enrichment, and establish star schema relationships
 - Goal: Enable time-intelligence functions (e.g., year-over-year returns) and sector-based slicing.
 
 ### Daily Return Calculation (Production-Grade Workaround)
@@ -106,7 +106,7 @@ To ensure fast refreshes and responsive visuals, rolling volatility was precompu
 This approach follows common analytical best practices:
 - Heavy, row-level statistical computations → upstream (Python)
 - Semantic modeling and aggregation → Power BI
-- Python (pandas/numpy) → ideal for vectorized rolling window operations on large tabular data.
+- Python (pandas/numpy) → ideal for vectorized rolling window operations on large tabular data
 
 ### Implementation
 1. The fully transformed fact table was exported once from the Power BI model (via DAX Studio).
@@ -130,9 +130,9 @@ This approach follows common analytical best practices:
 - Python-precomputed volatility refresh time: seconds
 
 ### Trade-offs
-- Volatility values are static between refreshes  
-  (acceptable for historical analysis and portfolio research)
-- Requires re-running the Python script if the dataset is updated
+- Volatility values are static between refreshes (acceptable for historical analysis)
+- Requires re-running the Python script for new data
+- Cleaner semantic layer and faster Power BI performance
 
 This refactor mirrors real-world analytics pipelines, where feature engineering is performed outside the BI layer to ensure scalability and maintainability. This separation of concerns aligns with production analytics patterns, where BI tools serve the semantic layer rather than the computational engine.
 
