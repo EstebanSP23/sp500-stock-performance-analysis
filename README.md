@@ -101,11 +101,12 @@ Computing rolling 252-day volatility directly in Power BI using a DAX calculated
 On a ~1.9M-row fact table, row-by-row window calculations significantly increased refresh time and impacted overall model responsiveness.
 
 ### Design Decision
-To address this, rolling volatility was **precomputed upstream using Python** and imported as a physical column, rather than calculated in DAX.
+To ensure fast refreshes and responsive visuals, rolling volatility was precomputed in Python (script: build_volatility_252d.py) and imported as a static column. This follows common practice of moving heavy statistical feature engineering upstream of the BI layer.
 
 This approach follows common analytical best practices:
 - Heavy, row-level statistical computations → upstream (Python)
 - Semantic modeling and aggregation → Power BI
+- Python (pandas/numpy) → ideal for vectorized rolling window operations on large tabular data.
 
 ### Implementation
 1. The fully transformed fact table was exported once from the Power BI model (via DAX Studio).
