@@ -136,6 +136,122 @@ This approach follows common analytical best practices:
 
 This refactor mirrors real-world analytics pipelines, where feature engineering is performed outside the BI layer to ensure scalability and maintainability. This separation of concerns aligns with production analytics patterns, where BI tools serve the semantic layer rather than the computational engine.
 
+## Risk-Adjusted Performance Metrics (Sharpe Ratio Design)
+
+### Objective
+To provide **finance-grade, interactive risk-adjusted performance metrics** without sacrificing Power BI performance on a ~1.9M row dataset.
+
+The Sharpe Ratio was selected as the primary risk-adjusted metric to contextualize returns relative to volatility, using a trailing 252-trading-day window.
+
+---
+
+### Sharpe Ratio Definition (Trailing 252 Days)
+
+The Sharpe Ratio is defined as:
+
+Sharpe Ratio =  
+( Annualized Return − Risk-Free Rate ) ÷ Annualized Volatility
+
+Where:
+- **Annualized Return** = mean daily return × 252  
+- **Volatility** = precomputed rolling 252-day annualized standard deviation  
+- **Risk-Free Rate** = 2% annually (documented assumption, static for this project)
+
+This formulation aligns with standard portfolio monitoring practices and avoids compounding edge cases common in short rolling windows.
+
+---
+
+### Design Challenge: Performance vs Interactivity
+
+Initial attempts to compute rolling Sharpe ratios entirely in DAX resulted in:
+- Excessive evaluation time when used at daily granularity
+- Poor responsiveness in visuals
+- Risk of incorrect results under complex filter contexts
+
+This led to a **hybrid design decision**:
+- Heavy rolling statistics → **Python preprocessing**
+- Context-aware ratios and aggregation → **DAX measures**
+
+---
+
+### Scenario-Specific Measure Design (Key Architectural Decision)
+
+Rather than using a single generic Sharpe measure everywhere, **two scenario-optimized measures were intentionally designed**:
+
+#### 1. Sharpe Ratio (Trailing 252d) [KPI]
+**Purpose:**  
+> “As of the selected date, how strong is the stock’s risk-adjusted performance?”
+
+**Used in:**
+- KPI cards
+- Ticker-level tables
+- Risk vs Return scatter plots
+
+**Design characteristics:**
+- Anchored to the **last visible calendar date**
+- Maps calendar dates to the **last available trading day**
+- Evaluated once per entity (fast)
+- Enforces a full 252-trading-day history requirement
+- Includes safeguards against near-zero volatility values
+
+This ensures the Sharpe Ratio behaves as a true **as-of financial KPI**, not a row-level calculation.
+
+---
+
+#### 2. Sharpe Ratio (Trailing 252d) [Series]
+**Purpose:**  
+> “How did risk-adjusted performance evolve over time?”
+
+**Used in:**
+- Line charts with DateDim[Date] on the X-axis
+
+**Design characteristics:**
+- Recomputed **per axis date**
+- Uses the most recent trading day ≤ axis date
+- Produces a smooth, interpretable historical Sharpe curve
+- Prevents distortion from weekends, holidays, or missing trading days
+
+---
+
+### Why Separate Measures (Even with Identical Math)?
+
+Although both measures share the same mathematical definition, they answer **different analytical questions**:
+
+| Scenario | Question Being Answered | Optimal Design |
+|--------|------------------------|----------------|
+| KPI / Card | “What is the Sharpe ratio right now?” | Single as-of evaluation |
+| Time Series | “How did Sharpe change over time?” | Axis-aware per-date evaluation |
+
+Separating measures:
+- Prevents accidental misuse across visuals
+- Improves performance predictability
+- Makes intent explicit to future readers and collaborators
+- Mirrors real-world semantic modeling practices
+
+> Measures are treated as **answers to specific business questions**, not just reusable formulas.
+
+---
+
+### Guardrails for Financial Correctness
+
+To ensure stable and interpretable results:
+- Sharpe Ratio is **blank until ≥252 trading days exist**
+- Volatility values below a small threshold are excluded to prevent ratio blow-ups
+- All calculations respect trading-day indexing rather than calendar days
+
+These safeguards prevent misleading early-period or low-liquidity artifacts.
+
+---
+
+### Outcome
+
+- Fully slicer-aware Sharpe Ratio
+- Correct behavior under DateDim or Ticker filtering
+- Fast visuals even on large datasets
+- Clear separation between statistical computation and semantic logic
+
+This approach reflects **production-grade financial analytics design**, balancing correctness, performance, and interpretability through **defensive semantic modeling** — where measures are intentionally scoped and named based on their analytical purpose.
+
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
 
