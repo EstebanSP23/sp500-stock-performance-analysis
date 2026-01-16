@@ -143,8 +143,6 @@ To provide **finance-grade, interactive risk-adjusted performance metrics** with
 
 The Sharpe Ratio was selected as the primary risk-adjusted metric to contextualize returns relative to volatility, using a trailing 252-trading-day window.
 
----
-
 ### Sharpe Ratio Definition (Trailing 252 Days)
 
 The Sharpe Ratio is defined as:
@@ -159,8 +157,6 @@ Where:
 
 This formulation aligns with standard portfolio monitoring practices and avoids compounding edge cases common in short rolling windows.
 
----
-
 ### Design Challenge: Performance vs Interactivity
 
 Initial attempts to compute rolling Sharpe ratios entirely in DAX resulted in:
@@ -171,8 +167,6 @@ Initial attempts to compute rolling Sharpe ratios entirely in DAX resulted in:
 This led to a **hybrid design decision**:
 - Heavy rolling statistics → **Python preprocessing**
 - Context-aware ratios and aggregation → **DAX measures**
-
----
 
 ### Scenario-Specific Measure Design (Key Architectural Decision)
 
@@ -196,8 +190,6 @@ Rather than using a single generic Sharpe measure everywhere, **two scenario-opt
 
 This ensures the Sharpe Ratio behaves as a true **as-of financial KPI**, not a row-level calculation.
 
----
-
 #### 2. Sharpe Ratio (Trailing 252d) [Series]
 **Purpose:**  
 > “How did risk-adjusted performance evolve over time?”
@@ -210,8 +202,6 @@ This ensures the Sharpe Ratio behaves as a true **as-of financial KPI**, not a r
 - Uses the most recent trading day ≤ axis date
 - Produces a smooth, interpretable historical Sharpe curve
 - Prevents distortion from weekends, holidays, or missing trading days
-
----
 
 ### Why Separate Measures (Even with Identical Math)?
 
@@ -230,8 +220,6 @@ Separating measures:
 
 > Measures are treated as **answers to specific business questions**, not just reusable formulas.
 
----
-
 ### Guardrails for Financial Correctness
 
 To ensure stable and interpretable results:
@@ -240,8 +228,6 @@ To ensure stable and interpretable results:
 - All calculations respect trading-day indexing rather than calendar days
 
 These safeguards prevent misleading early-period or low-liquidity artifacts.
-
----
 
 ### Outcome
 
