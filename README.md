@@ -165,8 +165,10 @@ Initial attempts to compute rolling Sharpe ratios entirely in DAX resulted in:
 - Risk of incorrect results under complex filter contexts
 
 This led to a **hybrid design decision**:
-- Heavy rolling statistics → **Python preprocessing**
-- Context-aware ratios and aggregation → **DAX measures**
+- Rolling statistical components required by risk metrics (e.g., 252-day volatility) → Python preprocessing  
+- Context-aware ratios and portfolio-level metrics (e.g., Sharpe Ratio) → DAX measures
+
+Although the Sharpe Ratio itself is calculated in DAX, one of its core inputs — rolling 252-day volatility — is precomputed in Python. This separation ensures that computationally expensive rolling statistics are handled upstream, while Power BI remains focused on semantic modeling and interactivity.
 
 ### Scenario-Specific Measure Design (Key Architectural Decision)
 
