@@ -150,6 +150,12 @@ The Sharpe Ratio is defined as:
 Sharpe Ratio =  
 ( Annualized Return − Risk-Free Rate ) ÷ Annualized Volatility
 
+Sharpe Ratio Interpretation (rough guide)
+< 0      → Underperformed risk-free rate
+0 – 1    → Acceptable
+1 – 2    → Good
+> 2      → Excellent
+
 Where:
 - **Annualized Return** = mean daily return × 252  
 - **Volatility** = precomputed rolling 252-day annualized standard deviation  
@@ -228,6 +234,7 @@ To ensure stable and interpretable results:
 - Sharpe Ratio is **blank until ≥252 trading days exist**
 - Volatility values below a small threshold are excluded to prevent ratio blow-ups
 - All calculations respect trading-day indexing rather than calendar days
+- Risk-free rate fixed at 2% (approximate 10-year Treasury average 2010–2026)
 
 These safeguards prevent misleading early-period or low-liquidity artifacts.
 
