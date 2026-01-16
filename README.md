@@ -251,11 +251,73 @@ This approach reflects **production-grade financial analytics design**, balancin
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
 
 ## Dashboard Overview
-*(Screenshots and .pbix coming soon – interactive views for stock/sector comparison, time-period slicing, and risk metrics)*
 
-![Dashboard Preview](powerbi/screenshots/overview.png) <!-- Replace with actual once uploaded -->
+The Power BI report is structured around a **Performance Overview** page designed for fast, executive-friendly analysis, while preserving analytical depth for exploration.
 
-[Download Power BI File](powerbi/SP500_Dashboard.pbix) <!-- Add once .pbix committed -->
+### Performance Overview Page
+
+**Top KPIs (as-of selected date):**
+- Sharpe Ratio (Trailing 252d)
+- Annualized Return (Trailing 252d)
+- Volatility (Trailing 252d)
+
+These KPIs are scenario-specific measures designed to behave as true *as-of financial metrics* under slicers.
+
+---
+
+**Time Series Analysis:**
+- Cumulative Return (Selected Range) line chart
+- Supports comparison by sector or selected tickers
+- Dynamically rebases to the start of the selected date range
+
+This view answers:
+> “How did value grow over time for the selected stocks or sectors?”
+
+---
+
+**Risk vs Return Analysis:**
+- Scatter plot:
+  - X-axis: Volatility (Trailing 252d)
+  - Y-axis: Annualized Return (Trailing 252d)
+  - One point per ticker
+  - Color-coded by sector
+
+This visual enables rapid identification of:
+- High-risk / low-return stocks (bottom-right)
+- Defensive profiles (bottom-left)
+- High-growth, high-volatility stocks (top-right)
+- Relatively efficient risk-return profiles
+
+Reference lines are used to visually segment risk and return regimes.
+
+---
+
+### Observed Pattern (Illustrative Insight)
+
+Across the analyzed period, **Information Technology stocks tend to cluster in the upper-right quadrant** of the Risk vs Return plot, indicating higher average returns accompanied by higher volatility.  
+
+This reinforces the trade-off between growth potential and risk concentration, rather than serving as an investment recommendation.
+
+> The dashboard is designed to support exploration and hypothesis generation, not prescriptive portfolio construction.
+
+## Repository Structure
+
+The repository is organized to mirror a production analytics workflow:
+
+- `data/`
+  - `raw/` — original source datasets
+  - `processed/` — cleaned and enriched datasets used for analysis
+
+- `scripts/`
+  - Python preprocessing scripts (e.g., rolling volatility computation)
+
+- `docs/`
+  - `assumptions_limitations.md`
+  - `data_dictionary.md`
+
+- `powerbi/`
+  - `SP500_Dashboard.pbix`
+  - `screenshots/` — key report views used in documentation
 
 ## Next Steps & Potential Enhancements
 - Enrich with sector/industry metadata for segmented analysis
