@@ -63,7 +63,7 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 ## Methodology & Tools
 - **ETL & Cleaning:** Power Query (unpivot wide → long format, date handling)
 - **Data Modeling:** Star schema in Power BI
-- **Calculations:** Hybrid approach — DAX for aggregations and ratios (e.g., cumulative returns, Sharpe ratio), Python for heavy rolling statistics (e.g., 252-day volatility)
+- **Calculations:** Hybrid approach — DAX for aggregations and ratios (e.g., cumulative returns, Sharpe ratio), Python for heavy rolling statistics (e.g., 252-day volatility, rolling drawdowns)
 - **Visualization:** Interactive dashboard for exploration and simple portfolio simulation
 
 ## Data Model & Relationships (Current State)
@@ -244,8 +244,53 @@ These safeguards prevent misleading early-period or low-liquidity artifacts.
 - Correct behavior under DateDim or Ticker filtering
 - Fast visuals even on large datasets
 - Clear separation between statistical computation and semantic logic
+- Together with drawdown metrics, the dashboard provides a balanced view of return efficiency, variability, and downside risk.
 
 This approach reflects **production-grade financial analytics design**, balancing correctness, performance, and interpretability through **defensive semantic modeling** — where measures are intentionally scoped and named based on their analytical purpose.
+
+## Drawdown Analysis (Capital Risk Perspective)
+
+While volatility and Sharpe Ratio describe *return variability* and *risk-adjusted efficiency*, they do not fully capture the **severity of capital losses** an investor may experience.
+
+To address this, drawdown metrics were introduced.
+
+### Drawdown Definitions
+
+- **Daily Drawdown**  
+  Measures the percentage decline from the most recent peak closing price:
+
+  Drawdown = ( Close / Running Peak Close ) − 1
+
+- **Max Drawdown (Trailing 252d)**  
+  The worst peak-to-trough loss observed over the last 252 trading days.
+
+Drawdowns are computed using **closing prices**, consistent with standard portfolio valuation and performance reporting practices.
+
+### Design Rationale
+
+- Closing prices reflect end-of-day portfolio valuation (NAV-style analysis)
+- Avoids overstating risk due to intraday price spikes
+- Maintains consistency with return and volatility calculations used in Sharpe Ratio
+
+Intraday extremes (e.g., daily lows) are more relevant for execution and stop-loss analysis and were intentionally excluded from the primary drawdown metric to preserve semantic consistency.
+
+### Implementation
+
+Drawdown calculations were performed in Python to efficiently compute:
+
+- Running peak prices per ticker
+- Daily drawdown series
+- Rolling 252-day maximum drawdown
+
+This approach avoids expensive row-by-row window calculations in DAX while enabling fast, slicer-aware visualization in Power BI.
+
+### Outcome
+
+- Max Drawdown behaves as a **stepwise series**, updating only when:
+  - A new worse drawdown occurs, or
+  - The previous worst drawdown rolls out of the 252-day window
+- Values are always ≤ 0 and interpretable as capital loss percentages
+- Complements Sharpe and Volatility to form a complete risk profile
 
 ## Key Insights & Recommendations
 *(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
@@ -260,6 +305,7 @@ The Power BI report is structured around a **Performance Overview** page designe
 - Sharpe Ratio (Trailing 252d)
 - Annualized Return (Trailing 252d)
 - Volatility (Trailing 252d)
+- Max Drawdown (Trailing 252d)
 
 These KPIs are scenario-specific measures designed to behave as true *as-of financial metrics* under slicers.
 
@@ -309,7 +355,9 @@ The repository is organized to mirror a production analytics workflow:
   - `processed/` — cleaned and enriched datasets used for analysis
 
 - `scripts/`
-  - Python preprocessing scripts (e.g., rolling volatility computation)
+  - `build_volatility_252d.py`
+  - `build_drawdown_252d.py`
+
 
 - `docs/`
   - `assumptions_limitations.md`
