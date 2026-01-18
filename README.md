@@ -325,8 +325,6 @@ This page answers:
 
 This page is designed for **fast executive understanding** and initial exploration.
 
----
-
 ### Page 2 — Drawdowns & Risk Stress
 ![Drawdowns](powerbi/screenshots/page2_drawdowns.png)
 
@@ -342,8 +340,6 @@ This page answers:
 - Return vs Max Drawdown scatter
 
 This page highlights **path-dependent risk** that volatility and Sharpe alone cannot capture.
-
----
 
 ### Page 3 — Sector Risk, Return & Sharpe
 ![Sector Risk vs Return](powerbi/screenshots/page3_sector_risk_return.png)
@@ -397,7 +393,11 @@ The repository is organized to mirror a production analytics workflow:
 
 - `powerbi/`
   - `SP500_Dashboard.pbix`
-  - `screenshots/` — key report views used in documentation
+  - `screenshots/`
+    - `page1_overview.png`
+    - `page1_risk_vs_return.png`
+    - `page2_drawdowns.png`
+    - `page3_sector_risk_return.png`
 
 ## Next Steps & Potential Enhancements
 - Enrich with sector/industry metadata for segmented analysis
