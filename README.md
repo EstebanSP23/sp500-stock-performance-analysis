@@ -7,6 +7,8 @@
 ## Business Context
 Retail investors often struggle with overwhelming market data when building portfolios. This project analyzes historical S&P 500 stock performance to provide actionable insights on returns, risk, and diversification.
 
+The analysis is structured across three layers — performance, risk stress, and sector stability — mirroring how investment decisions are evaluated in practice.
+
 **Business Problem:** How can we help retail investors identify strong-performing stocks and sectors while managing risk using historical price data?
 
 **Key Questions Answered:**
@@ -297,54 +299,73 @@ This approach avoids expensive row-by-row window calculations in DAX while enabl
 
 ## Dashboard Overview
 
-The Power BI report is structured around a **Performance Overview** page designed for fast, executive-friendly analysis, while preserving analytical depth for exploration.
+The Power BI report is structured into **three analytical layers**, each designed to answer a specific investment question.
 
-### Performance Overview Page
+### Page 1 — Performance Overview
+**Purpose:** High-level snapshot of return and risk.
 
-**Top KPIs (as-of selected date):**
-- Sharpe Ratio (Trailing 252d)
-- Annualized Return (Trailing 252d)
-- Volatility (Trailing 252d)
-- Max Drawdown (Trailing 252d)
+This page answers:
+> “How did the selected stocks or sectors perform, and how risky were they?”
 
-These KPIs are scenario-specific measures designed to behave as true *as-of financial metrics* under slicers.
+**Key elements:**
+- KPIs (as of selected end date):
+  - Sharpe Ratio (Trailing 252d)
+  - Annualized Return (Trailing 252d)
+  - Volatility (Trailing 252d)
+  - Max Drawdown (Trailing 252d)
+- Cumulative Return (Selected Range) time series
+- Risk vs Return scatter (Volatility vs Annualized Return)
 
----
-
-**Time Series Analysis:**
-- Cumulative Return (Selected Range) line chart
-- Supports comparison by sector or selected tickers
-- Dynamically rebases to the start of the selected date range
-
-This view answers:
-> “How did value grow over time for the selected stocks or sectors?”
+This page is designed for **fast executive understanding** and initial exploration.
 
 ---
 
-**Risk vs Return Analysis:**
-- Scatter plot:
+### Page 2 — Risk & Drawdowns
+**Purpose:** Capital risk and downside stress analysis.
+
+This page answers:
+> “How bad could losses get, and when did they occur?”
+
+**Key elements:**
+- Drawdown over time (close-to-close)
+- Rolling Max Drawdown (Trailing 252d)
+- Max Drawdown by Sector
+- Return vs Max Drawdown scatter
+
+This page highlights **path-dependent risk** that volatility and Sharpe alone cannot capture.
+
+---
+
+### Page 3 — Sector Performance & Stability
+**Purpose:** Allocation intuition and sector-level decision support.
+
+This page answers:
+> “Which sectors historically offered better trade-offs between return, risk, and downside?”
+
+**Key elements:**
+- Sector Risk vs Return scatter:
   - X-axis: Volatility (Trailing 252d)
   - Y-axis: Annualized Return (Trailing 252d)
-  - One point per ticker
-  - Color-coded by sector
+  - Trend line highlighting the overall risk–return relationship
+- Sharpe Ratio by Sector:
+  - Ranks sectors by risk-adjusted performance
+- Sector summary table:
+  - Annualized Return
+  - Volatility
+  - Sharpe Ratio
+  - Max Drawdown
+ 
+### Observed Patterns (Illustrative Insights)
 
-This visual enables rapid identification of:
-- High-risk / low-return stocks (bottom-right)
-- Defensive profiles (bottom-left)
-- High-growth, high-volatility stocks (top-right)
-- Relatively efficient risk-return profiles
+Across the analyzed period and at the sector level:
 
-Reference lines are used to visually segment risk and return regimes.
+- **Information Technology** exhibits the highest volatility but also the highest annualized returns, reflecting a structurally high-risk / high-reward profile.
+- **Communication Services** shows a more balanced risk–return trade-off, offering competitive returns with relatively lower volatility.
+- Some sectors with moderate returns still experience disproportionately deep drawdowns, highlighting that volatility alone does not capture capital risk.
 
----
+These observations reinforce that higher risk can be rewarded, but not uniformly across sectors, emphasizing the importance of diversification and downside awareness.
 
-### Observed Pattern (Illustrative Insight)
-
-Across the analyzed period, **Information Technology stocks tend to cluster in the upper-right quadrant** of the Risk vs Return plot, indicating higher average returns accompanied by higher volatility.  
-
-This reinforces the trade-off between growth potential and risk concentration, rather than serving as an investment recommendation.
-
-> The dashboard is designed to support exploration and hypothesis generation, not prescriptive portfolio construction.
+This page synthesizes performance and risk metrics into **actionable sector-level insights**, supporting allocation decisions rather than stock picking.
 
 ## Repository Structure
 
