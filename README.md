@@ -1,5 +1,7 @@
 # S&P 500 Stock Performance Analysis (2010–2026)
 
+Designed for retail investors, analysts, and hiring managers interested in risk-aware portfolio analysis using real-world BI techniques.
+
 **Interactive Power BI Dashboard for Retail Investor Insights**
 
 ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
@@ -28,6 +30,7 @@ The analysis is structured across three layers — performance, risk stress, and
   - No Adjusted Close (returns exclude dividends/splits—common approximation for price-based analysis).
   - Static sector assignments (no point-in-time changes for historical additions/removals)
   - Static snapshot (as of download date).
+  - This analysis reflects historical data available up to the download date and does not update automatically.
   
 (See `/docs/` for data dictionary and full assumptions.)
 
@@ -161,7 +164,7 @@ Sharpe Ratio Interpretation (rough guide)
 Where:
 - **Annualized Return** = mean daily return × 252  
 - **Volatility** = precomputed rolling 252-day annualized standard deviation  
-- **Risk-Free Rate** = 2% annually (documented assumption, static for this project)
+- **Risk-Free Rate** = 2% annually (static assumption, approximating long-term 10Y Treasury averages over the analysis period)
 
 This formulation aligns with standard portfolio monitoring practices and avoids compounding edge cases common in short rolling windows.
 
@@ -362,7 +365,7 @@ This page answers:
   - Sharpe Ratio
   - Max Drawdown
  
-### Observed Patterns (Illustrative Insights)
+### Observed Patterns (Illustrative, Not Exhaustive)
 
 Across the analyzed period and at the sector level:
 
