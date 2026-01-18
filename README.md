@@ -302,7 +302,14 @@ This approach avoids expensive row-by-row window calculations in DAX while enabl
 The Power BI report is structured into **three analytical layers**, each designed to answer a specific investment question.
 
 ### Page 1 — Performance Overview
-**Purpose:** High-level snapshot of return and risk.
+![Performance Overview](powerbi/screenshots/page1_overview.png)
+
+This page provides a high-level snapshot of performance and risk, allowing users to quickly assess returns, volatility, drawdowns, and risk-adjusted efficiency under dynamic filters.
+
+### Page 1 — Risk vs Return (Stock-Level)
+![Risk vs Return](powerbi/screenshots/page1_risk_vs_return.png)
+
+This scatter highlights the trade-off between annualized return and volatility at the stock level, with a break-even (0%) return reference line to separate value-creating from value-destroying investments.
 
 This page answers:
 > “How did the selected stocks or sectors perform, and how risky were they?”
@@ -320,8 +327,10 @@ This page is designed for **fast executive understanding** and initial explorati
 
 ---
 
-### Page 2 — Risk & Drawdowns
-**Purpose:** Capital risk and downside stress analysis.
+### Page 2 — Drawdowns & Risk Stress
+![Drawdowns](powerbi/screenshots/page2_drawdowns.png)
+
+This view focuses on capital risk, showing both daily drawdowns and rolling maximum drawdowns to capture downside severity and recovery dynamics.
 
 This page answers:
 > “How bad could losses get, and when did they occur?”
@@ -336,8 +345,10 @@ This page highlights **path-dependent risk** that volatility and Sharpe alone ca
 
 ---
 
-### Page 3 — Sector Performance & Stability
-**Purpose:** Allocation intuition and sector-level decision support.
+### Page 3 — Sector Risk, Return & Sharpe
+![Sector Risk vs Return](powerbi/screenshots/page3_sector_risk_return.png)
+
+This page aggregates performance at the sector level to support allocation decisions, combining risk–return positioning with Sharpe Ratio rankings.
 
 This page answers:
 > “Which sectors historically offered better trade-offs between return, risk, and downside?”
