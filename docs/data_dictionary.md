@@ -2,8 +2,6 @@
 
 This document describes the structure and meaning of the datasets used in the S&P 500 Risk & Return Analytics project, including raw inputs, transformed fact tables, and engineered analytical features.
 
----
-
 ## Raw Data (Wide Format – Source CSV)
 
 Original dataset as downloaded from Kaggle.
@@ -20,8 +18,6 @@ Original dataset as downloaded from Kaggle.
 - Multi-row headers required extensive transformation before analysis
 - No adjusted close is provided (dividends and splits excluded)
 
----
-
 ## Dimension Table: Stocks & Sectors (`sp500_sectors.csv`)
 
 Static enrichment table used for sector-based slicing and aggregation.
@@ -36,8 +32,6 @@ Static enrichment table used for sector-based slicing and aggregation.
 **Notes:**
 - Sector classifications are static (no historical reclassification)
 - Used as a dimension table in the Power BI star schema
-
----
 
 ## Fact Table: `Fact_StockPrices` (Final Analytical Table)
 
@@ -58,8 +52,6 @@ One row per **Trading Date + Ticker**
 | Close | Closing price |
 | Volume | Daily traded volume |
 
----
-
 ### Engineered Columns (Power BI – Calculated at Refresh)
 
 These columns are computed once at model refresh to ensure performance and correct trading-day logic.
@@ -68,8 +60,6 @@ These columns are computed once at model refresh to ensure performance and corre
 |------|-------------|
 | Trading Day Index | Sequential index per ticker representing trading-day order (handles weekends, holidays, delistings) |
 | Daily Return % | Close-to-close percentage return using the previous trading day |
-
----
 
 ### Precomputed Statistical Features (Python)
 
@@ -86,8 +76,6 @@ Computed outside Power BI using pandas/numpy for performance reasons and importe
 - `min_periods = 30` guardrail applied for stability
 - Population standard deviation (`ddof = 0`) used for financial consistency
 - Closing prices used for drawdown calculations (NAV-style analysis)
-
----
 
 ## Measures (DAX – Semantic Layer)
 
@@ -106,8 +94,6 @@ Measures are not stored as columns and are evaluated dynamically based on filter
 **Design Note:**
 - KPI measures and time-series measures are intentionally separated to reflect different analytical questions
 - Measures rely on trading-day logic rather than calendar assumptions
-
----
 
 ## Assumptions & Constraints
 
