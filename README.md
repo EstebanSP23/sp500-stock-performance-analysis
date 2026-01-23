@@ -377,6 +377,34 @@ These observations reinforce that higher risk can be rewarded, but not uniformly
 
 This page synthesizes performance and risk metrics into **actionable sector-level insights**, supporting allocation decisions rather than stock picking.
 
+## Power BI Service Deployment
+
+To complete the full analytics lifecycle, the dashboard was published to **Power BI Service**.
+
+**Deployment details:**
+- Report and semantic model published from Power BI Desktop
+- Interactive filtering and visuals validated in the Service environment
+- Dataset stored in Import mode
+- Refresh intentionally configured as **manual** due to static historical data sources
+
+This step demonstrates not only analytical and visualization skills, but also familiarity with **deployment, validation, and consumption of BI assets** in a shared environment — a critical requirement in real-world analytics teams.
+
+## Interview Preparation & Project Walkthrough
+
+This project is supported by a structured interview preparation guide covering:
+
+- 30–60 second project introduction
+- Architectural decisions (Python vs DAX, KPI vs Series measures)
+- Financial reasoning behind volatility, Sharpe Ratio, and drawdowns
+- Performance optimization trade-offs
+- Deployment considerations in Power BI Service
+- Suggested future extensions (portfolio diversification, macro overlays)
+
+The guide is intended to support **clear, business-oriented explanations** during interviews and stakeholder discussions.
+
+📄 Interview preparation document:  
+`Interview_Preparation_SP500_Project.docx`
+
 ## Repository Structure
 
 The repository is organized to mirror a production analytics workflow:
@@ -404,7 +432,7 @@ The repository is organized to mirror a production analytics workflow:
 
 ## Next Steps & Potential Enhancements
 - Enrich with sector/industry metadata for segmented analysis
-- Production idea: Integrate live API (e.g., Yahoo Finance) for real-time updates
+- Optional extension: Integrate live market data sources (e.g., APIs) to enable scheduled refresh and near real-time updates
 - Risks: Market data volatility; past performance ≠ future results (note for ethical recommendations)
 
 > Note: Performance optimizations (Python preprocessing + Import storage mode) were intentionally prioritized to reflect production-grade analytics workflows rather than purely BI-layer calculations.
