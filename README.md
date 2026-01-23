@@ -403,7 +403,7 @@ This project is supported by a structured interview preparation guide covering:
 The guide is intended to support **clear, business-oriented explanations** during interviews and stakeholder discussions.
 
 📄 Interview preparation document:  
-`Interview_Preparation_SP500_Project.docx`
+`docs/interview_preparation/Interview_Preparation_SP500_Project.md`
 
 ## Repository Structure
 
