@@ -391,6 +391,8 @@ This step demonstrates not only analytical and visualization skills, but also fa
 
 ## Interview Preparation & Project Walkthrough
 
+📄[Interview Preparation — Project Walkthrough](docs/interview_preparation/Interview_Preparation_SP500_Project.md)
+
 This project is supported by a structured interview preparation guide covering:
 
 - 30–60 second project introduction
@@ -401,9 +403,6 @@ This project is supported by a structured interview preparation guide covering:
 - Suggested future extensions (portfolio diversification, macro overlays)
 
 The guide is intended to support **clear, business-oriented explanations** during interviews and stakeholder discussions.
-
-📄 Interview preparation document:  
-`docs/interview_preparation/Interview_Preparation_SP500_Project.md`
 
 ## Repository Structure
 
@@ -421,6 +420,8 @@ The repository is organized to mirror a production analytics workflow:
 - `docs/`
   - `assumptions_limitations.md`
   - `data_dictionary.md`
+  - `interview_preparation/`
+    - `Interview_Preparation_SP500_Project.md`
 
 - `powerbi/`
   - `SP500_Dashboard.pbix`
