@@ -329,7 +329,7 @@ This page answers:
 This page is designed for **fast executive understanding** and initial exploration.
 
 ### Page 2 — Drawdowns & Risk Stress
-![Drawdowns](powerbi/screenshots/page2_drawdowns.png)
+![Drawdowns](powerbi/screenshots/page2_drawdowns_2.png)
 
 This view focuses on capital risk, showing both daily drawdowns and rolling maximum drawdowns to capture downside severity and recovery dynamics.
 
