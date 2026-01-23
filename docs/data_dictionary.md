@@ -116,5 +116,5 @@ Measures are not stored as columns and are evaluated dynamically based on filter
 - Static sector classification
 - Historical analysis only (no live refresh)
 
-(See [Assumptions & Limitations](docs/assumptions_limitations.md) for full context.)
+(See [Assumptions & Limitations](docs/assumptions_limitations.md) for full context.) 
 
