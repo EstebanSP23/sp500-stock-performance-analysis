@@ -377,6 +377,11 @@ These observations reinforce that higher risk can be rewarded, but not uniformly
 
 This page synthesizes performance and risk metrics into **actionable sector-level insights**, supporting allocation decisions rather than stock picking.
 
+> **Note on Dashboard Access**  
+> Due to tenant-level Power BI restrictions, public embedding is disabled.  
+> The report and dashboard are available as a `.pbix` file in this repository and were published to Power BI Service for validation.  
+> Screenshots and full documentation are provided to demonstrate functionality and design.
+
 ## Power BI Service Deployment
 
 To complete the full analytics lifecycle, the dashboard was published to **Power BI Service**.
