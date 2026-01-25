@@ -1,10 +1,13 @@
+![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Git LFS](https://img.shields.io/badge/Git_LFS-000000?style=for-the-badge&logo=git&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge)
+
 # S&P 500 Stock Performance Analysis (2010–2026)
 
 Designed for retail investors, analysts, and hiring managers interested in risk-aware portfolio analysis using real-world BI techniques.
 
 **Interactive Power BI Dashboard for Retail Investor Insights**
-
-![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
 
 ## Business Context
 Retail investors often struggle with overwhelming market data when building portfolios. This project analyzes historical S&P 500 stock performance to provide actionable insights on returns, risk, and diversification.
