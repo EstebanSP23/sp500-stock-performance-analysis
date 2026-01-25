@@ -389,10 +389,12 @@ To complete the full analytics lifecycle, the dashboard was published to **Power
 **Deployment details:**
 - Report and semantic model published from Power BI Desktop
 - Interactive filtering and visuals validated in the Service environment
-- Dataset stored in Import mode
+- Dataset stored in **Import mode**
 - Refresh intentionally configured as **manual** due to static historical data sources
 
-This step demonstrates not only analytical and visualization skills, but also familiarity with **deployment, validation, and consumption of BI assets** in a shared environment — a critical requirement in real-world analytics teams.
+This step demonstrates not only analytical and visualization skills, but also hands-on experience with **deployment, validation, and consumption of BI assets** — a critical requirement in real-world analytics teams.
+
+> **PBIX download note:** GitHub can’t preview large `.pbix` files in the browser. To download the report, click **View raw**, or clone the repository and run `git lfs pull`.
 
 ## Interview Preparation & Project Walkthrough
 
