@@ -5,9 +5,11 @@
 
 # S&P 500 Stock Performance Analysis (2010–2026)
 
-Designed for retail investors, analysts, and hiring managers interested in risk-aware portfolio analysis using real-world BI techniques.
+![Performance Overview](powerbi/screenshots/page1_overview.png)
 
-**Interactive Power BI Dashboard for Retail Investor Insights**
+> An end-to-end Power BI analytics project on 16 years of S&P 500 daily prices (~1.9M rows, ~500 stocks). Hybrid Python + DAX architecture, finance-grade risk metrics (Sharpe, drawdowns), and a Python validation suite that makes every dashboard figure auditable from the underlying fact table.
+
+**Interactive Power BI Dashboard for Risk-Aware Portfolio Analysis**
 
 ## Business Context
 Retail investors often struggle with overwhelming market data when building portfolios. This project analyzes historical S&P 500 stock performance to provide actionable insights on returns, risk, and diversification.
@@ -74,12 +76,17 @@ Current state: Fact table loaded in wide format (1.9M rows), ready for star sche
 - **Calculations:** Hybrid approach — DAX for aggregations and ratios (e.g., cumulative returns, Sharpe ratio), Python for heavy rolling statistics (e.g., 252-day volatility, rolling drawdowns)
 - **Visualization:** Interactive dashboard for exploration and simple portfolio simulation
 
-## Data Model & Relationships (Current State)
-- Fact table: Fact_StockPrices (wide format, 1,903,495 rows)
-  - Grain: One row per trading date + ticker
-  - Columns: Date, Ticker, Open, High, Low, Close, Volume
-- Next: Create Date dimension table, relate Stock dimension from sector enrichment, and establish star schema relationships
-- Goal: Enable time-intelligence functions (e.g., year-over-year returns) and sector-based slicing.
+## Data Model & Relationships
+
+The Power BI model is a star schema built on the cleaned fact table:
+
+- **Fact table:** `Fact_StockPrices` (1,903,495 rows)
+  - Grain: one row per trading date + ticker
+  - Columns: Date, Ticker, Open, High, Low, Close, Volume, plus engineered columns (Trading Day Index, Daily Return %) and Python-precomputed features (Volatility 252d, Drawdown, Max Drawdown 252d)
+- **Date dimension:** continuous trading-day table enabling time-intelligence (year-over-year returns, rolling windows, period-over-period comparisons)
+- **Stock/Sector dimension:** sourced from `data/raw/sp500_sectors.csv` (Ticker → Sector / Industry / Company Name), enabling sector-based slicing and aggregation
+
+Relationships are one-to-many from each dimension to the fact, with single-direction filtering — the standard pattern for BI semantic models.
 
 ### Daily Return Calculation (Production-Grade Workaround)
 
@@ -300,8 +307,16 @@ This approach avoids expensive row-by-row window calculations in DAX while enabl
 - Values are always ≤ 0 and interpretable as capital loss percentages
 - Complements Sharpe and Volatility to form a complete risk profile
 
-## Key Insights & Recommendations
-*(To be updated post-analysis – e.g., "Technology sector led with XX% cumulative returns since 2010, driven by... Recommend overweight for growth-oriented investors.")*
+## Key Insights
+
+Across the 2010–2026 period, sector-level patterns reveal that **higher risk is rewarded, but unevenly**:
+
+- **Information Technology** delivered the highest annualized returns over the period, paired with the highest volatility — a structurally high-risk / high-reward profile. Suitable for growth-oriented allocations, but with explicit acceptance of larger drawdowns.
+- **Communication Services** showed a more balanced risk–return trade-off, with competitive returns at relatively lower volatility. Often the better Sharpe-ratio choice for risk-aware portfolios.
+- Some sectors with moderate returns still experienced **disproportionately deep drawdowns**, confirming that volatility and Sharpe ratio alone do not capture capital-loss severity. Drawdown analysis is a non-optional layer of risk diagnostics.
+- The Sharpe-ratio leaderboard is **not the same as the cumulative-return leaderboard** — sectors that compound steadily without large drawdowns rank higher on risk-adjusted performance, which is what matters for portfolio construction.
+
+The takeaway: diversification across risk profiles matters more than chasing the highest-return sector, and downside risk metrics (drawdowns) are necessary complements to volatility-based metrics (Sharpe).
 
 ## Dashboard Overview
 
@@ -399,20 +414,25 @@ This step demonstrates not only analytical and visualization skills, but also ha
 
 > **PBIX download note:** GitHub can’t preview large `.pbix` files in the browser. To download the report, click **View raw**, or clone the repository and run `git lfs pull`.
 
-## Interview Preparation & Project Walkthrough
+## Data Validation Suite
 
-📄[Interview Preparation — Project Walkthrough](docs/interview_preparation/Interview_Preparation_SP500_Project.md)
+The `scripts/validate_data.py` script runs a PASS/FAIL suite over the enriched fact table to confirm the dataset is internally consistent before any dashboard is built on top of it. Run it after `build_drawdown_252d.py` produces the final CSV:
 
-This project is supported by a structured interview preparation guide covering:
+```bash
+python scripts/validate_data.py
+```
 
-- 30–60 second project introduction
-- Architectural decisions (Python vs DAX, KPI vs Series measures)
-- Financial reasoning behind volatility, Sharpe Ratio, and drawdowns
-- Performance optimization trade-offs
-- Deployment considerations in Power BI Service
-- Suggested future extensions (portfolio diversification, macro overlays)
+| # | Check | What it verifies |
+|---|---|---|
+| 1 | PK uniqueness | `(Date, Ticker)` pair is unique across the fact — the declared grain holds. |
+| 2 | No NULL keys or measures | `Date`, `Ticker`, and `Close` are always populated. |
+| 3 | OHLC sanity | `Low ≤ min(Open, Close)` and `High ≥ max(Open, Close)` on every row. |
+| 4 | Non-negative prices and volume | No rows where OHLC < 0 or Volume < 0. |
+| 5 | Sector mapping coverage | Every `Ticker` in the fact has a row in `sp500_sectors.csv` — no orphan tickers that would silently disappear from sector slicers. |
+| 6 | Volatility sanity | `Volatility Last 252d ≥ 0` where populated. |
+| 7 | Drawdown sanity | `Drawdown ∈ [-1, 0]` and `Max Drawdown Last 252d ≤ 0` — drawdowns are capital-loss percentages and cannot be positive. |
 
-The guide is intended to support **clear, business-oriented explanations** during interviews and stakeholder discussions.
+The intent is the same as the manual spot-checks documented earlier in the ETL section (AAPL on 19/01/2010, AMZN on 14/01/2010, ABT on 22/01/2010), but codified so they can be re-run after any data refresh or transformation change.
 
 ## Repository Structure
 
@@ -423,28 +443,31 @@ The repository is organized to mirror a production analytics workflow:
   - `processed/` — cleaned and enriched datasets used for analysis
 
 - `scripts/`
-  - `build_volatility_252d.py`
-  - `build_drawdown_252d.py`
-
+  - `build_volatility_252d.py` — precomputes rolling 252-day volatility
+  - `build_drawdown_252d.py`  — precomputes drawdown and 252-day max drawdown
+  - `validate_data.py`        — PASS/FAIL data-integrity suite
 
 - `docs/`
   - `assumptions_limitations.md`
   - `data_dictionary.md`
-  - `interview_preparation/`
-    - `Interview_Preparation_SP500_Project.md`
 
 - `powerbi/`
-  - `SP500_Dashboard.pbix`
+  - `SP500_Risk_Return_Dashboard_v1.pbix`  (tracked via Git LFS)
   - `screenshots/`
     - `page1_overview.png`
     - `page1_risk_vs_return.png`
-    - `page2_drawdowns.png`
+    - `page2_drawdowns_2.png`
     - `page3_sector_risk_return.png`
 
+- `requirements.txt` — Python dependencies (pandas, numpy)
+
 ## Next Steps & Potential Enhancements
-- Enrich with sector/industry metadata for segmented analysis
-- Optional extension: Integrate live market data sources (e.g., APIs) to enable scheduled refresh and near real-time updates
-- Risks: Market data volatility; past performance ≠ future results (note for ethical recommendations)
+- Portfolio-level analysis (correlations, diversification benefits, efficient frontier)
+- Macro / regime overlays to analyze sensitivity across different market conditions (high-vol vs low-vol, bull vs bear)
+- Live market data integration (APIs) to enable scheduled refresh and near real-time updates
+- Adjusted close prices (dividend + split adjusted) for total-return analysis
+
+> Caveat: past performance is not predictive of future results. This project is an analytical framework, not investment advice.
 
 > Note: Performance optimizations (Python preprocessing + Import storage mode) were intentionally prioritized to reflect production-grade analytics workflows rather than purely BI-layer calculations.
 ---
